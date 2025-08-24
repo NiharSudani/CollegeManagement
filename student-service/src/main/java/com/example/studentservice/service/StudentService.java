@@ -86,17 +86,23 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public StudentDto getStudentByRollNo(String rollNo) {
-        Student student = studentRepository.findAll().stream()
-                .filter(s -> s.getRollNo().equals(rollNo))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with roll number: " + rollNo));
+        Student student = studentRepository.findByRollNo(rollNo);
+        if (student == null) {
+            throw new EntityNotFoundException("Student not found with roll number: " + rollNo);
+        }
         return mapToDto(student);
     }
 
     @Transactional(readOnly = true)
     public List<StudentDto> searchStudentsByName(String name) {
-        return studentRepository.findAll().stream()
-                .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
+        return studentRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudentDto> searchStudentsByDepartment(String department) {
+        return studentRepository.findByDepartmentContainingIgnoreCase(department).stream()
                 .map(this::mapToDto)
                 .toList();
     }

@@ -70,13 +70,17 @@ public class StudentController {
     @GetMapping("/search")
     public ResponseEntity<List<StudentDto>> searchStudents(
             @RequestParam(required = false) String rollNo,
-            @RequestParam(required = false) String name) {
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String department) {
         
         if (rollNo != null) {
             StudentDto student = studentService.getStudentByRollNo(rollNo);
             return ResponseEntity.ok(List.of(student));
         } else if (name != null) {
             List<StudentDto> students = studentService.searchStudentsByName(name);
+            return ResponseEntity.ok(students);
+        } else if (department != null) {
+            List<StudentDto> students = studentService.searchStudentsByDepartment(department);
             return ResponseEntity.ok(students);
         } else {
             return ResponseEntity.badRequest().build();

@@ -66,6 +66,13 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
+    public List<CourseDto> searchCoursesByTitle(String title) {
+        return courseRepository.findByTitleContainingIgnoreCase(title).stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
     private CourseDto mapToDto(Course course) {
         return new CourseDto(
                 course.getId(),

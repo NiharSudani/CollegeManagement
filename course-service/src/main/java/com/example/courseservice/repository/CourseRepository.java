@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     boolean existsByCourseCode(String courseCode);
+    List<Course> findByTitleContainingIgnoreCase(String title);
+    List<Course> findByCourseCodeContainingIgnoreCase(String courseCode);
 }
